@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Random Names</title>
+	</head>
+	<body>
+		<h1>Random Fun</h1>
+		<form>
+			<fieldset>
+				<legend>Random Name Picker</legend>
+				<label for="inputName">Name: </label><input type="text" placeholder="Your name" name="inputName" id="inputName">
+				<input type="button" value="Go" id="btnGo"> <input type="reset" value="Cancel">
+				<hr>
+				<input type="button" value="Show All" id="btnShowAll"> <input type="button" value="Hide Names" id="btnHideAll"> <input type="button" value="Delete Names" id="btnDeleteAll">
+				<hr>
+				<input type="button" value="Get 1 Random" id="btnRandomOne">
+				<input type="button" value="Get All Random" id="btnRandomAll">
+			</fieldset>
+		</form>
+		<div id="divNameShow"></div>
+		
+		<script>
+			// IIFE - (Iffy) Immediately Invoked Function Express
+			(function(){
+				"use strict";
+				
+				// Created a Variable, assigned an Empty Array
+				// It's a Global Scope Variable - Can be used by any Function (anywhere in the JS Code)
+				// Global Scopes are less efficient, use more resources; Not necessarily "worse" option than Local Scope
+				var allNames = [];
+				
+				// Syntax for making a button Active. The Function (code at right)
+				// will run, when the Element at left is clicked.
+				// Expression to run a Function after an Event.
+				// Note: no Parentheses with this syntax
+				document.getElementById("btnGo").onclick = nameSave;
+				
+				// Create a Function to save a Name to the Array
+				// No Semi-colon at the end of a Function Declaration
+				function nameSave() {
+					// Local Scope Variable - Can only be used in THIS Function
+					// Local Scope Objects only exist as long as the Function is running
+					// They are more efficient and use less resources; Not necessarily "better" option than Global Scope
+					var tmpName = document.getElementById("inputName").value;
+					allNames.push(tmpName);								// Add an item to the Array
+					// console.log(allNames);							// Display, in the Console what's currently in the Array
+					document.getElementById("inputName").value = "";	// Clear out the Input to accept a new Name
+				} // End of nameSave()
+				
+				document.getElementById("btnShowAll").onclick = nameShow;
+				// Create a Function to show all Names in the Array
+				function nameShow() {
+					var nameLen = allNames.length;		// Store the number of items (Length) of the Array in a Variable
+					// If Conditional Statement
+					// Check for "Truth" of if(). Run 1st block of code if True.
+					// Or Else, run 2nd block of code if False.
+					if(nameLen != 0) {	// "If Array is NOT Empty..."
+						document.getElementById("divNameShow").innerHTML = allNames;	// In the Div on-screen, display the contents of the Array
+					} else {			// "Or Else, it IS Empty..."
+						alert("Sorry. No names to display!");							// Create a Popup with a message
+					}
+					
+				} // END of nameShow()
+				
+				document.getElementById("btnHideAll").onclick = nameClear;
+				// Create a Function to clear out the Div that displayed the Names from the Array
+				function nameClear() {
+					document.getElementById("divNameShow").innerHTML = "";	// Set the innerHTML Property of the Div Object to Empty (Null)
+				} // END nameClear()
+				
+				document.getElementById("btnRandomOne").onclick = nameShowRandomOne;
+				// Create a Function to show one random Name from the Array
+				function nameShowRandomOne() {
+					var nameLen = allNames.length,
+						// Create a Variable for a Random Number:
+						// Between 0 (Math.floor()) and maximum amount of names, nameLen
+						randomName = Math.floor(Math.random() * nameLen);
+					// console.log(randomName);		// In the Console, show the temporary Random Number we created
+					document.getElementById("divNameShow").innerHTML = allNames[randomName];	// Based on the current Random Number, pick an Index from the Array to display onscreen
+				} // END nameShowRandomOne()
+				
+				document.getElementById("btnRandomAll").onclick = nameShowRandomAll;
+				// Create a Function to show all the Names from the Array, in a Random order, from every click of the button
+				function nameShowRandomAll() {
+					document.getElementById("divNameShow").innerHTML = ""; // First, clear out the Div
+					var allNamesTmp = allNames.slice(0),		// Make a copy of the original Array (allNames), as allNamesTmp
+						allNamesTmpLen = allNamesTmp.length;	// Check the Length of the allNameTmp Array
+					// For Conditional Statement
+					// Starting from the total number of Names in the Array, count down until you reach 0
+					for(var i = allNamesTmpLen; i >= 0; i--) {	
+						var nameRandom = Math.floor(Math.random() * i);	// Based on the current number of Names in the Array, create a new Random Number
+						document.getElementById("divNameShow").innerHTML += "<br>" +	// In the Div onscreen, start with a Line Break,
+						allNamesTmp.splice(nameRandom, 1) + "<br>";						// then display the Random Name, and remove it from the temporary Array. Add a Line Break.
+					}
+				} // END nameShowRandomAll()
+				
+				document.getElementById("btnDeleteAll").onclick = deleteNames;
+				// Create a Function to delete the Array
+				function deleteNames() {
+					// Switch Conditional Statement
+					// Ask a possibility
+					// Based on answer, executes a Case, then ends
+					// If no Case was made, goes to Default
+					switch(confirm("About to delete ALL names. Proceed?")) {
+						case true: 
+							allNames = [];									// Set the Array to Null
+							nameClear();									// Clear the onscreen Div
+							alert("All names deleted. Have a nice day."); 	// Have a nice day
+							break;
+						case false:
+							// Do nothing
+							console.log(allNames);	// In the Console, display the currently-stored Names in the Array
+							break;
+						default:
+							// Nothing to do. A third possibility.
+							break;
+					}
+				}
+			})();
+		</script>
+	</body>
+	<!-- 
+		Name:		Victor Campos <vcampos@sdccd.edu>
+		Project:	Random Name Picker
+		Date:		2016-09-29
+		Description:A project to store names in an Array and retrieve them in various ways (randomly, for example).
+	-->
+</html>
